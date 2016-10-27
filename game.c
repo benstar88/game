@@ -2,25 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-/*******************globals***********************/
-
-//This block will be moved to a common file////////
-
-        typedef enum
-        {
-                desert,
-                woods,
-                lake,
-                mountains,
-                grasslands,
-                village,
-                path,
-                number_of_places
-        } place;
-
-        int max_level_size = 20;
-
-///////////////////////////////////////////////////
+#include "gameCommon.h"
 
 /*************************************************/
 

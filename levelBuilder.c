@@ -1,26 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "gameCommon.h"
+
 int main()
 {
-
-//This block will be moved to a common file////////
-
-	typedef enum
-	{
-		desert,
-		woods,
-		lake,
-		mountains,
-		grasslands,
-		village,
-		path,
-		number_of_places
-	} places;
-
-	int max_level_size = 20;
-
-///////////////////////////////////////////////////
 
 	FILE *outputFile = fopen("level.bin", "w");
 	int level_size = 0;
@@ -36,7 +20,7 @@ int main()
 			level_size = 0;
 		}
 	}
-	fwrite(&level_size, sizeof(places), 1, outputFile);
+	fwrite(&level_size, sizeof(place), 1, outputFile);
 
 	int level[level_size];
 
@@ -92,7 +76,7 @@ int main()
 		}
 	}
 		
-	fwrite(level, sizeof(places), level_size, outputFile);
+	fwrite(level, sizeof(place), level_size, outputFile);
 	
 	fclose(outputFile);
 	
