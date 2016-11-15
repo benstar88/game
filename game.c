@@ -12,6 +12,7 @@
 int main();
 int readLevelFile(char* fileName, place* outLevel);
 void clearScreen();
+void draw();
 
 /*************************************************/
 
@@ -41,7 +42,7 @@ int main()
 
 	while(!exit)
 	{
-		printf("\n\nWhat would you like to do?\nq = quit\nf = move forward\nb = move backward\nd = display game state\nm = show map\n: ");
+		printf(" \n \nWhat would you like to do? \nq = quit \nf = move forward \nb = move backward \nm = show map \n: ");
 		scanf("%s", input);
 
 		clearScreen();
@@ -58,6 +59,7 @@ int main()
 			{
 				printf("Out of bounds. You can't go any further forward");
 				fBPos--;
+				
 			}
 			else
 			{
@@ -66,7 +68,9 @@ int main()
 		}
 		else if(strcmp(input, "b") == 0)
 		{
-			if(fBPos < 0)
+			fBPos--;
+			
+			if(fBPos == ( 0 - 1))
 			{
 				printf("Out of bounds. You can't go any further backward");
 				fBPos++;
@@ -74,37 +78,7 @@ int main()
 			else
 			{
 				printf("You have moved backward");
-			}
-		}
-		else if(strcmp(input, "d") == 0)
-		{
-			if(level[fBPos] == desert)
-			{
-				printf("You are in the desert");
-			}
-			else if(level[fBPos] == woods)
-			{
-				printf("You are in the woods");
-			}
-			else if(level[fBPos] == lake)
-			{
-				printf("You are by a lake");
-			}
-			else if(level[fBPos] == mountains)
-			{
-				printf("You are in the mountains");
-			}
-			else if(level[fBPos] == grasslands)
-			{
-				printf("You are in the grasslands");
-			}
-			else if(level[fBPos] == village)
-			{
-				printf("You are in a village");
-			}
-			else if(level[fBPos] == path)
-			{
-				printf("You are on a path");
+	
 			}
 		}
 		else if(strcmp(input, "m") == 0)
@@ -139,12 +113,19 @@ int main()
 				{
 					printf("path  ");
 				}
+				
 			}
+
 		}
 		else
 		{
-			printf("\nThat's not a valid option");
+			printf("That's not a valid option");
 		}
+		if(!exit)
+		{
+                	draw(level[fBPos]);
+		}
+                
 	}
 
 	return 0;
@@ -185,6 +166,39 @@ void clearScreen()
 	#else
 		system("clear");
 	#endif
+}
+
+void draw(place position)
+{
+	printf("\n");
+	if(position == desert)
+	{
+		printf("You are in the desert");
+	}
+	else if(position == woods)
+	{
+		printf("You are in the woods");
+	}
+	else if(position == lake)
+	{
+		printf("You are by a lake");
+	}
+	else if(position == mountains)
+	{
+		printf("You are in the mountains");
+	}
+	else if(position == grasslands)
+	{
+		printf("You are in the grasslands");
+	}
+	else if(position == village)
+	{
+		printf("You are in a village");
+	}
+	else if(position == path)
+	{
+		printf("You are on a path");
+	}
 }
 
 /*************************************************/
