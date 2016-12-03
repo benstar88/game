@@ -19,6 +19,7 @@ int main()
 			printf("Your level must be a number between 1 and %d\n", max_level_size);
 			level_size = 0;
 		}
+		fseek(stdin,0,SEEK_END);
 	}
 	fwrite(&level_size, sizeof(place), 1, outputFile);
 
