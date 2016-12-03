@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include "gameCommon.h"
+#include "utilities/randNum.h"
 
 /*************************************************/
 
@@ -13,6 +14,7 @@ int main();
 int readLevelFile(char* fileName, place* outLevel);
 void clearScreen();
 void draw();
+void randomEncounter();
 
 /*************************************************/
 
@@ -36,6 +38,8 @@ int main()
 		char name[100];
 		printf("what is your name?: ");
 		scanf("%s", name);
+
+		fseek(stdin,0,SEEK_END);
 		
 		printf("Welcome %s", name);
 	}
@@ -64,6 +68,7 @@ int main()
 			else
 			{
 				printf("You have moved forward");
+				randomEncounter(level[fBPos]);
 			}
 		}
 		else if(strcmp(input, "b") == 0)
@@ -78,7 +83,7 @@ int main()
 			else
 			{
 				printf("You have moved backward");
-	
+				randomEncounter(level[fBPos]);
 			}
 		}
 		else if(strcmp(input, "m") == 0)
@@ -201,4 +206,67 @@ void draw(place position)
 	}
 }
 
+void randomEncounter(place position)
+{
+	if(position == desert)
+        {
+		int random = randNum(0, 3);
+		if(random == 1)
+		{
+			printf("\nyou met a camel");
+		}
+	}
+	else if(position == woods)
+        {
+		int random = randNum(0, 5);
+		if(random == 1)
+                {
+                        printf("\nyou met a deer");
+                }
+		else if(random == 2)
+		{
+			printf("\nyou met a bear");
+		}
+	}
+	else if(position == lake)
+        {
+		int random = randNum(0, 2);
+                if(random == 1)
+                {
+                        printf("\nyou met a duck");
+                }
+	}
+	else if(position == mountains)
+        {
+		int random = randNum(0, 99);
+                if(random == 1)
+                {
+                        printf("\nyou met a yeti");
+                }
+	}
+	else if(position == grasslands)
+        {
+                int random = randNum(0, 5);
+                if(random == 1)
+                {
+                        printf("\nyou met a bunny");
+                }
+        }
+	else if(position == village)
+        {
+                int random = randNum(0, 2);
+                if(random == 1)
+                {
+                        printf("\nyou met a villager");
+                }
+        }
+	else if(position == path)
+        {
+                int random = randNum(0, 2);
+                if(random == 1)
+                {
+                        printf("\nyou met a villager");
+                }
+        }
+}
 /*************************************************/
