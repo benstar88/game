@@ -26,7 +26,7 @@ int main()
 	{
 		manual(levelSize);
 	}
-	
+
 	return 0;
 }
 
@@ -36,14 +36,14 @@ void manual(int levelSize)
 
 	fwrite(&levelSize, sizeof(place), 1, outputFile);
 
-	int level[levelSize];
+	place level[levelSize];
 
 	for(int index = 0; index < levelSize; ++index)
 	{
 		printf("Enter the type of place for position %d \n", index);
 		printf("desert = 0 \nwoods = 1 \nlake = 2 \nmountains = 3 \ngrasslands = 4 \nvillage = 5 \npath = 6 \n: ");
 
-		scanf("%d", &level[index]);
+		scanf("%d", (int*)(&level[index]));
 
 		if(level[index] < 0 || level[index] >= number_of_places)
 		{
@@ -51,23 +51,23 @@ void manual(int levelSize)
 			--index;
 		}
 	}
-	
+
 	printLevel(levelSize, level);
-		
+
 	fwrite(level, sizeof(place), levelSize, outputFile);
-	
+
 	fclose(outputFile);
 }
 
 void automatic(int levelSize)
 {
         FILE *outputFile = fopen("level.bin", "w");
-	
+
 	seedRandom();
 
         fwrite(&levelSize, sizeof(place), 1, outputFile);
-	
-        int level[levelSize];
+
+        place level[levelSize];
 
         for(int index = 0; index < levelSize; ++index)
         {
@@ -110,10 +110,10 @@ bool shouldGenerateAutomatically()
 	{
 		printf("Would you like to design your own level, or generate one automatically? \nm = manual \na = automatic \n:  ");
 		scanf("%s", autoOrManual);
-		
+
 		// Clear the stdin buffer in case there were more characters waiting
 		fseek(stdin,0,SEEK_END);
-		
+
 		if(strcmp(autoOrManual, "m") == 0)
 		{
 			return false;
@@ -129,7 +129,6 @@ bool shouldGenerateAutomatically()
 
 void printLevel(int levelSize, place* level)
 {
-	
 	printf("Your level looks like this:\n");
 
         for(int index = 0; index < levelSize; ++index)

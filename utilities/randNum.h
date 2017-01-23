@@ -11,10 +11,10 @@ void seedRandom()
 * including lowLimit and including highLimit
 * if a number cannot be selected, the function will return 0
 */
-int randNum(lowLimit, highLimit)
+int randNum(int lowLimit, int highLimit)
 {
 	int modBy = (highLimit - lowLimit) + 1;
-	
+
 	if(modBy > RAND_MAX)
 	{
 		return 0;
@@ -32,6 +32,6 @@ int randNum(lowLimit, highLimit)
 
 	int randNum = rand() % modBy;
 	randNum = randNum + lowLimit;
-	
+
 	return randNum;	
 }
