@@ -41,7 +41,7 @@ void manual(int levelSize)
 		printf("Enter the type of place for position %d \n", index);
 		printf("desert = 0 \nwoods = 1 \nlake = 2 \nmountains = 3 \ngrasslands = 4 \nvillage = 5 \npath = 6 \n: ");
 
-		scanf("%d", &level[index]);
+		scanf("%d", (int*)(&level[index]));
 
 		if(level[index] >= number_of_places)
 		{
