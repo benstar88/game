@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include <stdbool.h>
-#include <stdio.h>
 
 #include "gameCommon.h"
 #include "utilities/randNum.h"
@@ -26,7 +24,7 @@ int main()
 	{
 		manual(levelSize);
 	}
-	
+
 	return 0;
 }
 
@@ -36,7 +34,7 @@ void manual(int levelSize)
 
 	fwrite(&levelSize, sizeof(place), 1, outputFile);
 
-	int level[levelSize];
+	place level[levelSize];
 
 	for(int index = 0; index < levelSize; ++index)
 	{
@@ -45,29 +43,29 @@ void manual(int levelSize)
 
 		scanf("%d", &level[index]);
 
-		if(level[index] < 0 || level[index] >= number_of_places)
+		if(level[index] >= number_of_places)
 		{
 			printf("The type of place must be a number between 0 and %d\n", number_of_places - 1);
 			--index;
 		}
 	}
-	
+
 	printLevel(levelSize, level);
-		
+
 	fwrite(level, sizeof(place), levelSize, outputFile);
-	
+
 	fclose(outputFile);
 }
 
 void automatic(int levelSize)
 {
         FILE *outputFile = fopen("level.bin", "w");
-	
+
 	seedRandom();
 
         fwrite(&levelSize, sizeof(place), 1, outputFile);
-	
-        int level[levelSize];
+
+        place level[levelSize];
 
         for(int index = 0; index < levelSize; ++index)
         {
@@ -76,7 +74,7 @@ void automatic(int levelSize)
 
 	printLevel(levelSize, level);
 
-        fwrite(level, sizeof(place), levelSize, outputFile);
+	fwrite(level, sizeof(place), levelSize, outputFile);
 
         fclose(outputFile);
 }
@@ -110,10 +108,10 @@ bool shouldGenerateAutomatically()
 	{
 		printf("Would you like to design your own level, or generate one automatically? \nm = manual \na = automatic \n:  ");
 		scanf("%s", autoOrManual);
-		
+
 		// Clear the stdin buffer in case there were more characters waiting
 		fseek(stdin,0,SEEK_END);
-		
+
 		if(strcmp(autoOrManual, "m") == 0)
 		{
 			return false;
@@ -129,7 +127,6 @@ bool shouldGenerateAutomatically()
 
 void printLevel(int levelSize, place* level)
 {
-	
 	printf("Your level looks like this:\n");
 
         for(int index = 0; index < levelSize; ++index)

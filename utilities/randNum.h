@@ -30,8 +30,8 @@ int randNum(lowLimit, highLimit)
 		return lowLimit;
 	}
 
-	int randNum = rand() % modBy;
-	randNum = randNum + lowLimit;
+	int randNumber = rand() % modBy;
+	randNumber = randNumber + lowLimit;
 	
-	return randNum;	
+	return randNumber;
 }
