@@ -39,7 +39,7 @@ void manual(int levelSize)
 	for(int index = 0; index < levelSize; ++index)
 	{
 		printf("Enter the type of place for position %d \n", index);
-		printf("desert = 0 \nwoods = 1 \nlake = 2 \nmountains = 3 \ngrasslands = 4 \nvillage = 5 \npath = 6 \n: ");
+		printf("desert = 0 \nwoods = 1 \nlake = 2 \nmountains = 3 \nocean = 4\ngrasslands = 5 \nvillage = 6 \npath = 7 \n: ");
 
 		scanf("%d", (int*)(&level[index]));
 
@@ -69,7 +69,7 @@ void automatic(int levelSize)
 
         for(int index = 0; index < levelSize; ++index)
         {
-                level[index] = randNum(0, 6);
+                level[index] = randNum(0, 7);
         }
 
 	printLevel(levelSize, level);
@@ -145,7 +145,10 @@ void printLevel(int levelSize, place* level)
                         case mountains:
                                 printf("mountains\n");
                                 break;
-                        case grasslands:
+                        case ocean:
+				printf("ocean\n");
+				break;
+			case grasslands:
                                 printf("grasslands\n");
                                 break;
                         case village:

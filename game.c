@@ -6,8 +6,12 @@
 #include "gameCommon.h"
 #include "utilities/randNum.h"
 #include "printColor.h"
+/***************globals***************************/
 
-/*************************************************/
+int playerHealth = 20;
+int wins = 0;
+int loses = 0;
+char name[50];
 
 /***************declare functions*****************/
 
@@ -15,11 +19,9 @@ int main();
 int readLevelFile(char* fileName, place* outLevel);
 void clearScreen();
 void draw();
-int randomEncounter(char* name, int playerHealth, place position);
-int PSR();
-int fight(char* name, int playerHealth, char* animal);
-
-/*************************************************/
+void randomEncounter(char* name, place position);
+void PSR();
+void fight(char* animal);
 
 /****************define program*******************/
 
@@ -30,6 +32,7 @@ int main()
 	char input[100];
 	place level[max_level_size];
 
+	seedRandom();
 	clearScreen();
 
 	int levelSize = readLevelFile("level.bin", level);
@@ -37,14 +40,11 @@ int main()
 	//exit should be true if the level is empty, in other words, if levelSize is zero
 	bool exit = levelSize == 0;
 
-	//give the player a name
-	char name[100];
-
 	if(!exit)
 	{
-		printf("what is your name?: ");
+		printf("what is your name? \n: ");
 		scanf("%s", name);
-
+		
 		fseek(stdin,0,SEEK_END);
 		
 		printBlu("Welcome %s", name);
@@ -52,7 +52,7 @@ int main()
 
 	while(!exit)
 	{
-		printf(" \n \nWhat would you like to do? \nq = quit \nf = move forward \nb = move backward \nm = show map \n: ");
+		printf(" \n \nWhat would you like to do? \nq = quit \nf = move forward \nb = move backward \nm = show map \ns = stats \n: ");
 		scanf("%s", input);
 
 		clearScreen();
@@ -64,12 +64,12 @@ int main()
 		else if(strcmp(input, "f") == 0)
 		{
 			fBPos++;
-			
+
 			if(fBPos >= levelSize)
 			{
 				printf("Out of bounds. You can't go any further forward");
 				fBPos--;
-				
+
 			}
 			else
 			{
@@ -78,13 +78,13 @@ int main()
 				{
 					playerHealth++;
 				}
-				playerHealth = randomEncounter(name, playerHealth, level[fBPos]);
+				randomEncounter(name, level[fBPos]);
 			}
 		}
 		else if(strcmp(input, "b") == 0)
 		{
 			fBPos--;
-			
+
 			if(fBPos == ( 0 - 1))
 			{
 				printf("Out of bounds. You can't go any further backward");
@@ -97,7 +97,7 @@ int main()
 				{
 					playerHealth++;
 				}
-				playerHealth = randomEncounter(name, playerHealth, level[fBPos]);
+				randomEncounter(name, level[fBPos]);
 			}
 		}
 		else if(strcmp(input, "m") == 0)
@@ -106,35 +106,99 @@ int main()
 			{
 				if(level[i] == desert)
 				{
-					printf("desert  ");
+					if(i == fBPos)
+					{
+						printBlu("desert ");
+					}
+					else
+					{
+						printf("desert ");
+					}
 				}
 				else if(level[i] == woods)
 				{
-					printf("woods  ");
+					if(i == fBPos)
+					{
+						printBlu("woods ");
+					}
+					else
+					{
+						printf("woods ");
+					}
 				}
 				else if(level[i] == lake)
 				{
-					printf("lake  ");
+					if(i == fBPos)
+					{
+						printBlu("lake ");
+					}
+					else
+					{
+						printf("lake ");
+					}
 				}
 				else if(level[i] == mountains)
 				{
-					printf("mountains  ");
+					if(i == fBPos)
+					{
+						printBlu("mountains ");
+					}
+					else
+					{
+						printf("mountains ");
+					}
+				}
+				else if(level[i] == ocean)
+				{
+					if(i == fBPos)
+					{
+						printBlu("ocean ");
+					}
+					else
+					{
+						printf("ocean ");
+					}
 				}
 				else if(level[i] == grasslands)
 				{
-					printf("grasslands  ");
+					if(i == fBPos)
+					{
+						printBlu("grasslands ");
+					}
+					else
+					{
+						printf("grasslands ");
+					}
 				}
 				else if(level[i] == village)
 				{
-					printf("village  ");
+					if(i == fBPos)
+					{
+						printBlu("village ");
+					}
+					else
+					{
+						printf("village ");
+					}
 				}
 				else if(level[i] == path)
 				{
-					printf("path  ");
+					if(i == fBPos)
+					{
+						printBlu("path ");
+					}
+					else
+					{
+						printf("path ");
+					}
 				}
-				
+
 			}
 
+		}
+		else if(strcmp(input, "s") == 0)
+		{
+			printf("name: %s \nwins: %d \nloses: %d \nin bag: %s \nhealth: %d", name, wins, loses, "WIP", playerHealth);
 		}
 		else
 		{
@@ -142,9 +206,9 @@ int main()
 		}
 		if(!exit)
 		{
-                	draw(level[fBPos]);
+			draw(level[fBPos]);
 		}
-                
+
 	}
 
 	return 0;
@@ -206,6 +270,10 @@ void draw(place position)
 	{
 		printf("You are in the mountains");
 	}
+	else if(position == ocean)
+	{
+		printf("You are on the beach");
+	}
 	else if(position == grasslands)
 	{
 		printf("You are in the grasslands");
@@ -220,247 +288,261 @@ void draw(place position)
 	}
 }
 
-int randomEncounter(char* name, int playerHealth, place position)
+void randomEncounter(char* name, place position)
 {
 	char* animal;
-	
+
 	if(position == desert)
-        {
-		int random = randNum(0, 3);
-		if(random == 1)
+	{
+		int random = randNum(0, 2);
+		if(random == 0)
 		{
 			animal = "camel";
 			printGrn("\nyou met a %s", animal);
 		}
 	}
 	else if(position == woods)
-        {
-		int random = randNum(0, 5);
-		if(random == 1)
-                {
+	{
+		int random = randNum(0, 2);
+		if(random == 0)
+		{
 			animal = "deer";
-                        printGrn("\nyou met a %s", animal);
-                }
+			printGrn("\nyou saw a %s", animal);
+		}
 		else if(random == 2)
 		{
 			animal = "bear";
-			printRed("\nyou met a %s", animal);
-			playerHealth = fight(name, playerHealth, animal);
+			printRed("\nyou disturbed a %s", animal);
+			fight(animal);
 		}
 	}
 	else if(position == lake)
-        {
-		int random = randNum(0, 2);
-                if(random == 1)
-                {
+	{
+		int random = randNum(0, 1);
+		if(random == 0)
+		{
 			animal = "duck";
-                        printGrn("\nyou met a %s", animal);
-                }
+			printGrn("\nyou met a %s", animal);
+		}
 	}
 	else if(position == mountains)
-        {
-		int random = randNum(0, 99);
-                if(random == 1)
-                {
+	{
+		int random = randNum(0, 9);
+		if(random == 0)
+		{
 			animal = "yeti";
-                        printRed("\nyou met a %s", animal);
-			playerHealth = fight(name, playerHealth, animal);
-                }
+			printRed("\nyou met a %s", animal);
+			fight(animal);
+		}
+	}
+	else if(position == ocean)
+	{
+		int random = randNum(0, 3);
+		if(random == 0)
+		{
+			animal = "turtle";
+			printGrn("\nyou met a %s", animal);
+		}
+		else if(random == 3)
+		{
+			animal = "shark";
+			printRed("\nyou found a %s", animal);
+			fight(animal);
+		}
 	}
 	else if(position == grasslands)
-        {
-                int random = randNum(0, 4);
-                if(random == 0 || random == 1)
-                {
+	{
+		int random = randNum(0, 4);
+		if(random == 0 || random == 1)
+		{
 			animal = "bunny";
-                        printGrn("\nyou met a %s", animal);
-                }
+			printGrn("\nyou met a %s", animal);
+		}
 		else if(random == 2 || random == 3)
 		{
 			animal = "killerBunny";
-			printRed("\nyou met a %s", animal);
-			playerHealth = fight(name, playerHealth, animal);
+			printRed("\nyou upset a %s", animal);
+			fight(animal);
 		}
-        }
+	}
 	else if(position == village)
-        {
-                int random = randNum(0, 2);
-                if(random == 1)
-                {
+	{
+		int random = randNum(0, 2);
+		if(random == 0)
+		{
 			animal = "villager";
-                        printBlu("\nyou met a %s", animal);
-         		PSR();
-		}
-        }
-	else if(position == path)
-        {
-                int random = randNum(0, 2);
-                if(random == 1)
-                {
-			animal = "villager";
-                        printBlu("\nyou met a %s", animal);
+			printBlu("\nyou met a %s", animal);
 			PSR();
-                }
-        }
-
-	return playerHealth;
+		}
+		else if(random == 2)
+		{
+			animal = "rat";
+			printBlu("\nyou saw a %s", animal);
+		}
+	}
+	else if(position == path)
+	{
+		int random = randNum(0, 2);
+		if(random == 0)
+		{
+			animal = "villager";
+			printBlu("\nyou met a %s", animal);
+			PSR();
+		}
+	}
 }
 
-int PSR()
+void PSR()
 {
-	enum SPR
+	enum
 	{
 		paper,
 		scissors,
 		rock
 	};
+
+	int opponent;
+	char choice[2];
 	
-        int PLA;
-        int OPP;
-	
-	int choice;
-	printf("\ndo you want to play paper scissors rock \n0 = yes \n1 = no \n:");
-	scanf("%d", &choice);
+	printf("\ndo you want to play paper scissors rock \ny = yes \nn = no \n:");
+	scanf("%s", choice);
 
 	clearScreen();
-	
-	if(choice == 0)
+
+	if(strcmp(choice, "y") == 0)
 	{
-        	while(0 == 0)
-        	{
-	
-	                printf("paper, scissors, rock \n0 = paper \n1 = scissors \n2 = rock \n: ");
-	                scanf("%d", &PLA);
-	
-	                fseek(stdin,0,SEEK_END);
+		for(;;)
+		{
+			printf("paper, scissors, rock \np = paper \ns = scissors \nr = rock \n: ");
+			scanf("%s", choice);
+			fseek(stdin,0,SEEK_END);
 			clearScreen();
 
-	                OPP = randNum(0, 2);
-	
-	                if(PLA == 0 && OPP == 1)
-	                {
-	                        printRed("scissors\n");
-		                        printRed("you lost\n");
-		                return 0;
-	                }
-	                else if(PLA == 1 && OPP == 2)
-	                {
-	                        printRed("rock\n");
-	                        printRed("you lost\n");
-	                        return 0;
-	                }
-	                else if(PLA == 2 && OPP == 0)
-	                {
-	                        printRed("paper\n");
-	                        printRed("you lost\n");
-	                        return 0;
-	                }
-	                else if(PLA == 0 && OPP == 2)
-	                {
-	                        printRed("rock\n");
-	                        printGrn("you won\n");
-	                        return 1;
-	                }
-	                else if(PLA == 1 && OPP == 0)
-	                {
-	                        printRed("paper\n");
-	                        printGrn("you won\n");
-	                        return 1;
-	                }
-	                else if(PLA == 2 && OPP == 1)
-	                {
-	                        printRed("scissors\n");
-	                        printGrn("you won\n");
-	                        return 1;
-	                }
-	                else
-	                {
-	                        printRed("%s\n", PLA);
+			opponent = randNum(0, 2);
+
+			if(strcmp(choice, "p") == 0 && opponent == scissors)
+			{
+				printRed("your opponent picked scissors\n");
+				printRed("you lost\n");
+				loses++;
+				break;
+			}
+			else if(strcmp(choice, "s") == 0 && opponent == rock)
+			{
+				printRed("your opponent picked rock\n");
+				printRed("you lost\n");
+				loses++;
+				break;
+			}
+			else if(strcmp(choice, "r") == 0 && opponent == paper)
+			{
+				printRed("your opponent picked paper\n");
+				printRed("you lost\n");
+				loses++;
+				break;
+			}
+			else if(strcmp(choice, "p") == 0 && opponent == rock)
+			{
+				printRed("your opponent picked rock\n");
+				printGrn("you won\n");
+				wins++;
+				break;
+			}
+			else if(strcmp(choice, "s") == 0 && opponent == paper)
+			{
+				printRed("your opponent picked paper\n");
+				printGrn("you won\n");
+				wins++;
+				break;
+			}
+			else if(strcmp(choice, "r") == 0 && opponent == scissors)
+			{
+				printRed("your opponent picked scissors\n");
+				printGrn("you won\n");
+				wins++;
+				break;
+			}
+			else
+			{
 				printBlu("tie\n");
-        	        }
+			}
 		}
 	}
-	else
-	{
-		return 2;
-	}
-
-        return 0;
 }
 
-int fight(char* name, int playerHealth, char* animal)
+void fight(char* animal)
 {
-        int animalHealth = randNum(15, 20);
-        int animalAttack;
+	int animalHealth = randNum(15, 20);
+	int animalAttack;
 
-        int doWhat;
+	char choice[2];
 
-        while(0 == 0)
-        {
-                printf("\n%s's health: %d \n%s's health: %d", name, playerHealth, animal, animalHealth);
+	for(;;)
+	{
+		printf("\n%s's health: %d \n%s's health: %d", name, playerHealth, animal, animalHealth);
 
-                printf("\nwhat will you do (0 = attack, 1 = flee): ");
-                scanf("%d", &doWhat);
+		printf("\na = attack \nf = flee \n: ");
+		scanf("%s", choice);
 
 		fseek(stdin,0,SEEK_END);
 		clearScreen();
 
-                if(doWhat == 1)
-                {
+		if(strcmp(choice, "f") == 0)
+		{
 			printBlu("you ran away");
-                	return playerHealth;
-                }
-                else if(doWhat == 0)
-                {
-                        printf("you attack\n");
-                        if(randNum(0, 3) == 1)
-                        {
-                                printBlu("you missed\n");
-                        }
-                        else
-                        {
-                                animalHealth = animalHealth - 4;
-                        }
+			break;
+		}
+		else if(strcmp(choice, "a") == 0)
+		{
+			printf("you attack\n");
+			if(randNum(0, 3) == 1)
+			{
+				printBlu("you missed\n");
+			}
+			else
+			{
+				animalHealth = animalHealth - 4;
+			}
 
-                        if(animalHealth <= 0)
-                        {
-                                printGrn("you won!!!\n");
-                                break;
-                        }
+			if(animalHealth <= 0)
+			{
+				printGrn("you won!!!\n");
+				wins++;
+				break;
+			}
 
-                        animalAttack = randNum(0, 2);
-                        if(animalAttack == 0 || animalAttack == 1)
-                        {
-                                printf("%s used scratch", animal);
-                                if(randNum(0, 4) == 1)
-                                {
-                                        printRed("\nthe %s missed", animal);
-                                }
-                                else
-                                {
-                	                playerHealth = playerHealth - 3;
-                                }
-                        }
-                        else if(animalAttack == 2)
-                        {
-                                printf("%s used bite", animal);
-                                if(randNum(0, 4) == 1)
-                                {
-                                        printRed("\nthe %s missed", animal);
-                                }
-                                else
-                                {
-                                        playerHealth = playerHealth - 5;
-                                }
-                        }
-                        if(playerHealth <= 0)
-                        {
-                                printRed("\nyou lost!!!\n");
-                                return 20;
-                        }
-                }
-        }
-	return playerHealth;
+			animalAttack = randNum(0, 2);
+			if(animalAttack == 0 || animalAttack == 1)
+			{
+				printf("the %s used nip", animal);
+				if(randNum(0, 3) == 1)
+				{
+					printRed("\nthe %s missed", animal);
+				}
+				else
+				{
+					playerHealth = playerHealth - 3;
+				}
+			}
+			else if(animalAttack == 2)
+			{
+				printf("the %s used bite", animal);
+				if(randNum(0, 4) == 1)
+				{
+					printRed("\nthe %s missed", animal);
+				}
+				else
+				{
+					playerHealth = playerHealth - 5;
+				}
+			}
+			if(playerHealth <= 0)
+			{
+				printRed("\nyou lost!!!\n");
+				playerHealth = 20;
+				loses++;
+				break;
+			}
+		}
+	}
 }
-
-/*************************************************/

@@ -4,10 +4,10 @@ typedef enum
         woods,
         lake,
         mountains,
+		ocean,
         grasslands,
         village,
         path,
         number_of_places
 } place;
-
-int max_level_size = 20;
+int max_level_size = 30;
